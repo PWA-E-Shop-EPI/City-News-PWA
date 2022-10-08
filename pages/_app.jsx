@@ -1,8 +1,16 @@
-import Head from 'next/head'
-import '../styles/globals.css'
-import { AppProps } from 'next/app'
+import React from 'react';
+import { UserProvider } from '@auth0/nextjs-auth0';
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+import Layout from '../components/Layout';
+
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import initFontAwesome from '../utils/initFontAwesome';
+import '../styles/globals.css';
+import Head from 'next/head'
+
+initFontAwesome();
+
+export default function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
@@ -18,13 +26,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
         <link rel="manifest" href="/manifest.json" />
         <link
-          href="/icons/favicon-16x16.png"
+          href="/icons/icon-16x16.png"
           rel="icon"
           type="image/png"
           sizes="16x16"
         />
         <link
-          href="/icons/favicon-32x32.png"
+          href="/icons/icon-32x32.png"
           rel="icon"
           type="image/png"
           sizes="32x32"
@@ -32,7 +40,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
         <meta name="theme-color" content="#317EFB" />
       </Head>
-      <Component {...pageProps} />
-    </>
+      <UserProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </UserProvider>    </>
   )
 }
