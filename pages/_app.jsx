@@ -1,5 +1,6 @@
 import React from 'react';
 import { UserProvider } from '@auth0/nextjs-auth0';
+import { Toaster } from 'react-hot-toast';
 
 import Layout from '../components/Layout';
 
@@ -13,6 +14,10 @@ initFontAwesome();
 export default function App({ Component, pageProps }) {
   return (
     <>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+      />
       <Head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
