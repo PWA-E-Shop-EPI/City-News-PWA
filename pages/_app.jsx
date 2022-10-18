@@ -6,11 +6,11 @@ import Layout from '../components/Layout';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import initFontAwesome from '../utils/initFontAwesome';
 import '../styles/globals.css';
-import Head from 'next/head'
+import Head from 'next/head';
 
 initFontAwesome();
 
-export default function MyApp({ Component, pageProps }) {
+export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>
@@ -44,6 +44,7 @@ export default function MyApp({ Component, pageProps }) {
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </UserProvider>    </>
-  )
+      </UserProvider>
+    </>
+  );
 }

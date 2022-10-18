@@ -3,7 +3,7 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 import Highlight from '../components/Highlight';
 
-export default function SSRPage({ user: any }) {
+export default function SSRPage({ user }) {
   return (
     <>
       <div className="mb-5" data-testid="ssr">
