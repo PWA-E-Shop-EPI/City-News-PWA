@@ -4,7 +4,10 @@ import toast from 'react-hot-toast';
 import Hero from '../components/Hero';
 import Content from '../components/Content';
 import dynamic from "next/dynamic";
-import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, Input, InputGroup, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Plus } from 'react-feather';
+import { useUser } from '@auth0/nextjs-auth0';
+import Loading from '../components/Loading';
 
 const axios = require('axios');
 
@@ -216,6 +219,7 @@ export default function Index() {
   const [modal, setModal] = useState(false);
   const [response, setResponse] = useState([])
   const [coordinates, setCoordinates] = useState([48.866667, 2.333333])
+  const { user, isLoading } = useUser();
 
   const MapWithNoSSR = dynamic(() => import("../components/Map"), {
     ssr: false
@@ -252,21 +256,25 @@ export default function Index() {
 
   return (
     <>
-      {/* <Hero />
-      <hr /> */}
-      <Input style={{
+      {isLoading && <Loading />}
+      <InputGroup style={{
         position: 'absolute',
         zIndex: 10,
         width: "100%",
-        maxWidth: 500,
-        top: 135,
-        left: "50%",
-        transform: 'translate(-50%, -50%)',
+        maxWidth: 300,
+        top: 116,
+        left: 16,
+        // transform: 'translate(-50%, -50%)',
       }}
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-        onKeyDown={(e) => checkKey(e.key)}
-      />
+      >
+        <InputGroupText>
+          🏠
+        </InputGroupText>
+        <Input placeholder="username" value={city}
+          onChange={(e) => setCity(e.target.value)}
+          onKeyDown={(e) => checkKey(e.key)} />
+      </InputGroup>
+
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>Plusieurs Choix possible</ModalHeader>
         <ModalBody>
@@ -285,6 +293,11 @@ export default function Index() {
         </ModalFooter>
       </Modal>
       <MapWithNoSSR coordinate={coordinates} />
+      {
+        user && (
+          <Button color="primary" onClick={() => window.location.href = '/new'} style={{ position: "absolute", zIndex: 11, bottom: 16, right: 16, borderRadius: 130, width: 50, height: 50 }}><Plus size={30} style={{ marginLeft: -2 }} /></Button>
+        )
+      }
     </>
   );
 }

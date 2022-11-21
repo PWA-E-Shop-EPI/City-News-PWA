@@ -23,37 +23,17 @@ const NavBar = () => {
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <div className="nav-container" data-testid="navbar">
+    <div className="nav-container" data-testid="navbar" style={{zIndex: 15}}>
       <Navbar color="light" light expand="md">
         <Container>
-          <NavbarBrand className="logo" />
+          <PageLink href="/" className="nav-link" testId="navbar-home">
+            <NavbarBrand className="logo" />
+          </PageLink>
           <NavbarToggler onClick={toggle} data-testid="navbar-toggle" />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar data-testid="navbar-items">
               <NavItem>
-                <PageLink href="/" className="nav-link" testId="navbar-home">
-                  Home
-                </PageLink>
               </NavItem>
-              {user && (
-                <>
-                  <NavItem>
-                    <PageLink href="/csr" className="nav-link" testId="navbar-csr">
-                      Client-side rendered page
-                    </PageLink>
-                  </NavItem>
-                  <NavItem>
-                    <PageLink href="/ssr" className="nav-link" testId="navbar-ssr">
-                      Server-side rendered page
-                    </PageLink>
-                  </NavItem>
-                  <NavItem>
-                    <PageLink href="/external" className="nav-link" testId="navbar-external">
-                      External API
-                    </PageLink>
-                  </NavItem>
-                </>
-              )}
             </Nav>
             <Nav className="d-none d-md-block" navbar>
               {!isLoading && !user && (
@@ -62,7 +42,8 @@ const NavBar = () => {
                     href="/api/auth/login"
                     className="btn btn-primary btn-margin"
                     tabIndex={0}
-                    testId="navbar-login-desktop">
+                    testId="navbar-login-desktop"
+                  >
                     Log in
                   </AnchorLink>
                 </NavItem>
@@ -87,6 +68,11 @@ const NavBar = () => {
                     <DropdownItem className="dropdown-profile" tag="span">
                       <PageLink href="/profile" icon="user" testId="navbar-profile-desktop">
                         Profile
+                      </PageLink>
+                    </DropdownItem>
+                    <DropdownItem className="dropdown-profile" tag="span">
+                      <PageLink href="/events" icon="user" testId="navbar-eve,ts-desktop">
+                        Mes événements
                       </PageLink>
                     </DropdownItem>
                     <DropdownItem id="qsLogoutBtn">
@@ -136,6 +122,12 @@ const NavBar = () => {
                     Profile
                   </PageLink>
                 </NavItem>
+                <NavItem>
+                  <PageLink href="/ev ents" icon="user" testId="navbar-profile-mobile">
+                    Mes evenements
+                  </PageLink>
+                </NavItem>
+
                 <NavItem id="qsLogoutBtn">
                   <AnchorLink
                     href="/api/auth/logout"
