@@ -1,3 +1,4 @@
+import { UserProfile } from '@auth0/nextjs-auth0';
 import React, { useEffect, useState } from 'react';
 
 //styles
@@ -8,33 +9,27 @@ interface LeafletMapProps {
 }
 
 interface State {
-  displayingMap: boolean;
   leafletMapProps: LeafletMapProps;
-  isMounted: boolean;
 }
 
 export const Map = (): JSX.Element => {
   const [state, setState] = useState<State>({
-    displayingMap: true,
     leafletMapProps: {
       map: null
     },
-    isMounted: false
   });
 
   useEffect(() => {
-    if (!state.displayingMap) return;
     window.addEventListener('resize', () => {
       if (state.leafletMapProps.map) {
         state.leafletMapProps.map.invalidateSize(true);
       }
     });
-  }, [state.displayingMap]);
+  }, []);
 
   useEffect(() => {
-    if (!state.displayingMap) return;
     createMap();
-  }, [state.displayingMap]);
+  }, []);
 
   const createMap = () => {
     var L = require('leaflet');
@@ -89,10 +84,9 @@ export const Map = (): JSX.Element => {
       handleOnClickMap(map, rc.unproject(coords));
     });*/
 
-    setState({ ...state, displayingMap: true, isMounted: true, leafletMapProps: { map: map } });
+    setState({ ...state, leafletMapProps: { map: map } });
     //setMapStore(newMapStore);
   };
-
   return <Styled.Map id='map'></Styled.Map>;
 };
 

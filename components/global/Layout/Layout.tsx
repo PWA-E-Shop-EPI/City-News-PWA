@@ -42,12 +42,12 @@ export const Layout = (props: Props): JSX.Element => {
           <Link href={paths.home.index} passHref>
             <Styled.NavbarLink isSelected={props.keySelected === 0}>Home</Styled.NavbarLink>
           </Link>
-          <Link href={paths.home.index} passHref>
+          <Link href={paths.home.newEvent.index} passHref>
             <Styled.NavbarLink isSelected={props.keySelected === 1}>New event</Styled.NavbarLink>
           </Link>
         </Styled.NavbarLinks>
         <Styled.NavbarOptions>
-          <Styled.MenuDropdown overlay={getProfileMenu()} placement={'bottom'}>
+          <Styled.MenuDropdown trigger={['click']} overlay={getProfileMenu()} placement={'bottom'}>
             <Styled.Avatar src={user ? user.picture ?? '' : ''}/>
           </Styled.MenuDropdown>
         </Styled.NavbarOptions>

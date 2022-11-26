@@ -18,7 +18,7 @@ export const Navbar = styled.div`
 `;
 
 export const NavbarTitle = styled.div`
-  width: 222px;
+  width: 192px;
   height: 80px;
   background-image: url('/logo.png');
   background-position: center;
@@ -74,17 +74,17 @@ export const Avatar = styled.div`
   background-position: center;
   background-size: contain;
   border-radius: 60px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const MenuDropdown = styled(Dropdown)``;
 
 export const Menu = styled(AntdMenu)`
-  background-color: #292929;
+  background-color: white;
   max-width: 200px;
-
-  & > .ant-dropdown-menu-item-only-child:hover {
-    background: rgba(0, 0, 0, 0.2);
-  }
 `;
 
 interface MenuParentLinkProps {

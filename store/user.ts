@@ -1,31 +1,10 @@
+import { UserProfile } from '@auth0/nextjs-auth0';
 import { Store, StoreConfig } from 'hooks/useStore';
 
-export enum AuthenticationStatus {
-  SUCCESS,
-  FAILED,
-}
-
-export enum Role {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-}
-
-export interface UserStoreValues {
-  id: number;
-  login: string
-  email: string
-  authenticationStatus: AuthenticationStatus
-  token: string
-  role: Role
+export interface UserStoreValues extends UserProfile {
 }
 
 export const initialValues: UserStoreValues = {
-  id: 0,
-  login: '',
-  email: '',
-  authenticationStatus: AuthenticationStatus.FAILED,
-  token: '',
-  role: Role.USER,
 };
 
 const config: StoreConfig<UserStoreValues> = {
@@ -34,7 +13,7 @@ const config: StoreConfig<UserStoreValues> = {
 };
 
 export class UserStore extends Store<UserStoreValues> {
-
+  
 }
 
 export default config;

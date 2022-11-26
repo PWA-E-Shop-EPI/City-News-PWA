@@ -1,45 +1,57 @@
 import React from 'react';
-import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getSession, UserProfile, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
 
-const Profile = (): JSX.Element => {
-  return (
-    <div>Profile</div>
-  )
+//components
+import Layout from 'components/global/Layout/Layout';
 
-  /*const { user, isLoading } = useUser();
+//styles
+import * as Styled from 'styles/pages/profile';
+
+//hooks
+import useStore from 'hooks/useStore';
+
+//store
+import userStoreConfig, { UserStore } from 'store/user';
+
+//config
+import paths from 'config/paths';
+
+export const getServerSideProps = withPageAuthRequired({
+  returnTo: paths.home.profile.index,
+});
+
+interface Props {
+  user: UserProfile;
+}
+
+const Profile = (props: Props): JSX.Element => {
+  const [userStore] = useStore<UserStore>(
+    new UserStore({ ...userStoreConfig, initialValues: props.user })
+  );
+  const router = useRouter();
 
   return (
     <>
-      {isLoading && <Loading />}
-      {user && (
-        <>
-          <Row className="align-items-center profile-header mb-5 text-center text-md-left" data-testid="profile">
-            <Col md={2}>
-              <img
-                src={user.picture}
-                alt="Profile"
-                className="rounded-circle img-fluid profile-picture mb-3 mb-md-0"
-                decode="async"
-                data-testid="profile-picture"
-              />
-            </Col>
-            <Col md>
-              <h2 data-testid="profile-name">{user.name}</h2>
-              <p className="lead text-muted" data-testid="profile-email">
-                {user.email}
-              </p>
-            </Col>
-          </Row>
-          <Row data-testid="profile-json">
-            <Highlight>{JSON.stringify(user, null, 2)}</Highlight>
-          </Row>
-        </>
-      )}
+      <Head>
+        <title>City News | Profile</title>
+      </Head>
+      <Layout keySelected={-1}>
+        <Styled.Profile>
+          <Styled.ProfilePicture src={userStore.getValues().picture ?? ''} />
+          <Styled.ProfileDescription>
+            <p>Email: {userStore.getValues().email}</p>
+            <p>Name: {userStore.getValues().name}</p>
+            <p>Nickname: {userStore.getValues().nickname}</p>
+            <Styled.LogoutButton type="primary" onClick={() => router.push(paths.home.api.auth.logout.index)}>
+              Log out
+            </Styled.LogoutButton>
+          </Styled.ProfileDescription>
+        </Styled.Profile>
+      </Layout>
     </>
-  );*/
-}
+  );
+};
 
-export default withPageAuthRequired(Profile, {
-  onRedirecting: () => <div/>,
-  onError: error => <div>{error.message}</div>
-});
+export default Profile;

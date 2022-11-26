@@ -7,3 +7,11 @@ export enum DeviceType {
   MOBILE,
   UNKNOWN
 }
+
+export enum EventType {
+  NATURAL_DISASTER = "Natural disaster",
+  POPULAR_EVENT = "Popular event",
+  PEOPLE = "People",
+  MARKETS_EVENTS = "Markets and events",
+  OTHER = "Other",
+}
