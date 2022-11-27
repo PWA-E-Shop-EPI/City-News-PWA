@@ -41,6 +41,7 @@
     "leaflet-defaulticon-compatibility": "^0.1.1",
     "leaflet-geosearch": "^3.1.0",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "morgan": "^1.10.0",
     "next": "^12.3.0",
     "next-pwa": "^5.5.4",

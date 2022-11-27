@@ -1,8 +1,0 @@
-.popupCustom {
-  width: 135px;
-  height: 95px;
-}
-
-.popupCustom > div:nth-child(1) > div:nth-child(1) {
-  margin: 0px !important;
-}

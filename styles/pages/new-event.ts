@@ -17,15 +17,6 @@ export const Map = styled.div`
   margin-top: 30px;
 `;
 
-export const Popup = styled.div`
-  width: 135px;
-  height: 95px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 export const DeleteMarkerButton = styled(Button)`
 
 `;

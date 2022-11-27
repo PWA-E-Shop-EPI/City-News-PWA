@@ -18,3 +18,12 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.leaflet-popupCustom {
+  width: 135px;
+  height: 95px;
+}
+
+.leaflet-popupCustom > div:nth-child(1) > div:nth-child(1) {
+  margin: 0px !important;
+}

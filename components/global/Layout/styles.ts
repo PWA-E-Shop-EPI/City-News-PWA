@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, Dropdown, Menu as AntdMenu } from 'antd';
+import { Dropdown, Menu as AntdMenu } from 'antd';
 
 export const Layout = styled.div`
   overflow: auto;
@@ -15,6 +15,11 @@ export const Navbar = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  @media (max-width: 500px) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 `;
 
 export const NavbarTitle = styled.div`
@@ -23,7 +28,6 @@ export const NavbarTitle = styled.div`
   background-image: url('/logo.png');
   background-position: center;
   background-size: contain;
-  //background-color: blue;
 `;
 
 export const NavbarLinks = styled.div`
@@ -40,6 +44,10 @@ export const NavbarLinks = styled.div`
 
   & > a {
     margin-left: 30px;
+
+    @media (max-width: 500px) {
+      margin-left: 10px;
+    }
   }
 
   & > a:first-child {

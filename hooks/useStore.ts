@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BehaviorSubject } from 'rxjs';
-import {cloneDeep} from 'lodash';
+import { cloneDeep } from 'lodash';
 
 export interface StoreConfig<S> {
   storeName: string;
@@ -20,10 +20,19 @@ export class Store<S> {
     this.initialValues = cloneDeep({ ...config.initialValues });
   }
 
+  /**
+   * Get store name
+   */
   public getStoreName = () => this.storeName;
 
+  /**
+   * Perform a deep copy of values and return them
+   */
   public getValues = () => cloneDeep(this.values);
 
+  /**
+   * Get initial values
+   */
   public getInitialValues = () => cloneDeep(this.initialValues);
 }
 
@@ -38,43 +47,37 @@ export interface GlobalStore<S> {
   callback?: (currentStore: S) => void;
 }
 
-const getNewSubject = <S>(storeInitialValues: S) => new BehaviorSubject<GlobalStore<S>>({
-  store: storeInitialValues,
-  callback: undefined,
-});
+const getNewSubject = <S>(storeInitialValues: S) =>
+  new BehaviorSubject<GlobalStore<S>>({
+    store: storeInitialValues,
+    callback: undefined
+  });
 
 export const resetStore = () => {
   subjects$.next({});
 };
 
 export const useStore = <CS>(
-  receivedStore: Store<unknown>,
-): [
-    CS,
-    (newStore: Store<unknown>, callback?: (currentStore: Store<unknown>) => void) => void,
-  ] => {
+  receivedStore: Store<unknown>
+): [CS, (newStore: Store<unknown>, callback?: (currentStore: Store<unknown>) => void) => void] => {
   const t = subjects$.value[receivedStore.getStoreName()];
   const unknownSavedStoreSubject: BehaviorSubject<unknown> | undefined = t;
   const [, triggerNewUpdate] = useState<boolean>(false);
 
   if (!unknownSavedStoreSubject) {
-    (subjects$.value[receivedStore.getStoreName()] as BehaviorSubject<
-    GlobalStore<Store<unknown>>
-    >) = getNewSubject<Store<unknown>>(receivedStore);
+    (subjects$.value[receivedStore.getStoreName()] as BehaviorSubject<GlobalStore<Store<unknown>>>) =
+      getNewSubject<Store<unknown>>(receivedStore);
     subjects$.next(subjects$.value);
   }
 
-  const savedStoreSubject: BehaviorSubject<GlobalStore<Store<unknown>>> = subjects$
-    .value[receivedStore.getStoreName()] as BehaviorSubject<
-  GlobalStore<Store<unknown>>
-  >;
+  const savedStoreSubject: BehaviorSubject<GlobalStore<Store<unknown>>> = subjects$.value[
+    receivedStore.getStoreName()
+  ] as BehaviorSubject<GlobalStore<Store<unknown>>>;
 
   useEffect(() => {
-    const subscription = savedStoreSubject.subscribe(
-      () => {
-        triggerNewUpdate((prevState) => !prevState);
-      },
-    );
+    const subscription = savedStoreSubject.subscribe(() => {
+      triggerNewUpdate(prevState => !prevState);
+    });
 
     return () => {
       if (subscription) {
@@ -83,26 +86,22 @@ export const useStore = <CS>(
     };
   }, [savedStoreSubject]);
 
-  const dispatch = (
-    newStore: Store<unknown>,
-    callback?: (currentStore: Store<unknown>) => void,
-  ) => {
+  /**
+   * Update the store
+   */
+  const dispatch = (newStore: Store<unknown>, callback?: (currentStore: Store<unknown>) => void) => {
     if (savedStoreSubject) {
       savedStoreSubject.next({
         ...savedStoreSubject.value,
         store: newStore,
-        callback,
+        callback
       });
     }
   };
 
   return [
-    (
-      subjects$.value[receivedStore.getStoreName()] as BehaviorSubject<
-      GlobalStore<Store<unknown>>
-      >
-    ).value.store as CS,
-    dispatch,
+    (subjects$.value[receivedStore.getStoreName()] as BehaviorSubject<GlobalStore<Store<unknown>>>).value.store as CS,
+    dispatch
   ];
 };
 

@@ -1,15 +1,22 @@
-import { UserProfile } from '@auth0/nextjs-auth0';
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 
 //styles
 import * as Styled from './styles';
 
-interface LeafletMapProps {
-  map: any;
-}
+//hooks
+import useStore from 'hooks/useStore';
+
+//store
+import eventsStoreConfig, { EventsStore } from 'store/events';
+
+//common
+import { LeafletMapProps } from 'common/types';
 
 interface State {
   leafletMapProps: LeafletMapProps;
+  displayingMap: boolean;
+  eventSelected: number;
 }
 
 export const Map = (): JSX.Element => {
@@ -17,7 +24,10 @@ export const Map = (): JSX.Element => {
     leafletMapProps: {
       map: null
     },
+    displayingMap: false,
+    eventSelected: -1
   });
+  const [eventsStore, dispatchEventsStore] = useStore<EventsStore>(new EventsStore(eventsStoreConfig));
 
   useEffect(() => {
     window.addEventListener('resize', () => {
@@ -30,6 +40,39 @@ export const Map = (): JSX.Element => {
   useEffect(() => {
     createMap();
   }, []);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        console.log(position);
+        state.leafletMapProps.map.setView([position.coords.latitude, position.coords.longitude], 13);
+      },
+
+      function (error) {
+        console.error('Error Code = ' + error.code + ' - ' + error.message);
+      }
+    );
+  }, [state.displayingMap]);
+
+  const displayDescription = (): JSX.Element => {
+    if (state.eventSelected === -1) return <></>;
+    const eventsStoreValues = eventsStore.getValues();
+    const date = moment(eventsStoreValues.events[state.eventSelected].date).locale('en').format('LLL');
+    return (
+      <Styled.EventDescription>
+        <Styled.EventDescriptionTitle>
+          {eventsStoreValues.events[state.eventSelected].title}
+        </Styled.EventDescriptionTitle>
+        <p>Event type: {eventsStoreValues.events[state.eventSelected].type}</p>
+        <p>
+          Date: <Styled.EventDescriptionDate>{date}</Styled.EventDescriptionDate>
+        </p>
+        <Styled.EventDescriptionDescription>
+          {eventsStoreValues.events[state.eventSelected].text}
+        </Styled.EventDescriptionDescription>
+      </Styled.EventDescription>
+    );
+  };
 
   const createMap = () => {
     var L = require('leaflet');
@@ -50,44 +93,68 @@ export const Map = (): JSX.Element => {
 
     delete L.Icon.Default.prototype._getIconUrl;
     L.Icon.Default.mergeOptions({
-      iconRetinaUrl: '/leaflet/marker-icon-2x.png',
+      /*iconRetinaUrl: '/leaflet/marker-icon-2x.png',
       iconUrl: '/leaflet/marker-icon.png',
-      shadowUrl: '/leaflet/marker-shadow.png'
+      shadowUrl: '/leaflet/marker-shadow.png'*/
+      iconRetinaUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+    var greyMarkerIcon = new L.Icon({
+      iconRetinaUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
     });
 
-    /*const newMapStore = {...mapStore};
-    newMapStore.mapsList[mapStore.mapSelected].markers.forEach((marker, index) => {
-      const markerOnMap = L.marker([marker.position.x, marker.position.y]);
+    const eventsStoreValues = eventsStore.getValues();
+    eventsStoreValues.events.forEach((event, index) => {
+      let markerOnMap = null;
+      if (event.expires > 0) {
+        markerOnMap = L.marker([event.lat, event.lng]);
+      } else if (event.expires <= 0 && event.expires > -7) {
+        markerOnMap = L.marker([event.lat, event.lng], {icon: greyMarkerIcon});
+      } else {
+        return;
+      }
       map.addLayer(markerOnMap);
-      marker.markerOnMap = markerOnMap;
-      markerOnMap
-        .bindPopup(
-          ReactDOMServer.renderToString(
-            <div id={"popupContent_" + index}></div>
-          ),
-          {
-            className: styles.popupCustom,
-          }
-        )
-        .on("popupopen", function (e: any) {
-          ReactDOM.render(
-            displayPopup(map, markerOnMap, index, marker.position),
-            document.querySelector("#popupContent_" + index)
-          );
+      console.log(event);
+      event.markerOnMap = markerOnMap;
+      event.markerOnMap.on('click', function (e: any) {
+        map.setView([event.lat, event.lng], 13);
+        setState(prevState => {
+          return {
+            ...prevState,
+            eventSelected: prevState.eventSelected === -1 ? index : prevState.eventSelected === index ? -1 : index
+          };
         });
+      });
+      map.on('click', function () {
+        setState(prevState => {
+          return {
+            ...prevState,
+            eventSelected: -1
+          };
+        });
+      });
     });
-
-    // set markers on click events in the map
-    map.on("click", function (event: any) {
-      // any position in leaflet needs to be projected to obtain the image coordinates
-      var coords = rc.project(event.latlng);
-      handleOnClickMap(map, rc.unproject(coords));
-    });*/
-
-    setState({ ...state, leafletMapProps: { map: map } });
-    //setMapStore(newMapStore);
+    eventsStore.setValues(eventsStoreValues);
+    dispatchEventsStore(eventsStore);
+    setState({ ...state, displayingMap: true, leafletMapProps: { map: map } });
   };
-  return <Styled.Map id='map'></Styled.Map>;
+  return (
+    <Styled.MapWrapper>
+      <Styled.Map id="map"></Styled.Map>
+      {displayDescription()}
+    </Styled.MapWrapper>
+  );
 };
 
 export default Map;

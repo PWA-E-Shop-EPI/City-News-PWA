@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { useUser } from '@auth0/nextjs-auth0';
 
 //styles
 import * as Styled from './styles';
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const Layout = (props: Props): JSX.Element => {
-  const { user, isLoading } = useUser();
+  const { user } = useUser();
 
   const getProfileMenu = () => {
     return (
@@ -37,7 +37,7 @@ export const Layout = (props: Props): JSX.Element => {
   return (
     <Styled.Layout className={props.className}>
       <Styled.Navbar id={'navbar'}>
-        <Styled.NavbarTitle></Styled.NavbarTitle>
+        <Styled.NavbarTitle/>
         <Styled.NavbarLinks>
           <Link href={paths.home.index} passHref>
             <Styled.NavbarLink isSelected={props.keySelected === 0}>Home</Styled.NavbarLink>

@@ -1,6 +1,6 @@
 import { CookieName } from 'common/enum';
 
-export const API_PATH = process.env.NEXT_PUBLIC_API_PATH ? process.env.NEXT_PUBLIC_API_PATH : '';
+export const API_PATH = process.env.NEXT_PUBLIC_API_PATH ?? '';
 export const TOKEN_NAME = CookieName.AUTH_TOKEN;
 
 export interface PathProps {

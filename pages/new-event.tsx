@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
-import { UserProfile, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Head from 'next/head';
 
 //config
@@ -11,11 +11,12 @@ import paths from 'config/paths';
 import Layout from 'components/global/Layout/Layout';
 
 //styles
-import styles from 'styles/pages/new-event.module.css';
 import * as Styled from 'styles/pages/new-event';
+import * as GlobalStyled from 'styles/globals';
 
 //common
 import { EventType } from 'common/enum';
+import { LeafletMapProps } from 'common/types';
 
 export const getServerSideProps = withPageAuthRequired({
   returnTo: paths.home.newEvent.index
@@ -27,10 +28,6 @@ interface Marker {
     x: number;
     y: number;
   };
-}
-
-interface LeafletMapProps {
-  map: any;
 }
 
 interface State {
@@ -71,11 +68,11 @@ export const NewEvent = (): JSX.Element => {
 
   const displayPopup = (map: any, marker: any): JSX.Element => {
     return (
-      <Styled.Popup>
+      <GlobalStyled.Popup>
         <Styled.DeleteMarkerButton onClick={() => handleOnClickDeleteEmptyMarker(map, marker)} type="primary" danger>
           Delete
         </Styled.DeleteMarkerButton>
-      </Styled.Popup>
+      </GlobalStyled.Popup>
     );
   };
 
@@ -94,7 +91,7 @@ export const NewEvent = (): JSX.Element => {
 
     marker
       .bindPopup(ReactDOMServer.renderToString(<div id={'popupContent_0'}></div>), {
-        className: styles.popupCustom
+        className: "leaflet-popupCustom",
       })
       .on('popupopen', function (e: any) {
         ReactDOM.render(displayPopup(map, marker), document.querySelector('#popupContent_0'));
