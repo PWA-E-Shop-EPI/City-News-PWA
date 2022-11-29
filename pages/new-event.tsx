@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
@@ -42,6 +42,10 @@ export const NewEvent = (): JSX.Element => {
     },
     marker: null
   });
+  const stateRef = useRef<State>();
+  stateRef.current = state;
+
+  console.log('newState =>', state);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
@@ -91,17 +95,21 @@ export const NewEvent = (): JSX.Element => {
 
     marker
       .bindPopup(ReactDOMServer.renderToString(<div id={'popupContent_0'}></div>), {
-        className: "leaflet-popupCustom",
+        className: 'leaflet-popupCustom'
       })
       .on('popupopen', function (e: any) {
         ReactDOM.render(displayPopup(map, marker), document.querySelector('#popupContent_0'));
       });
-    setState(prevState => {
+    if (stateRef.current) {
+      setState({ ...stateRef.current, marker: newMarker });
+    }
+    /*setState(prevState => {
+      console.log("setState");
       return {
         ...prevState,
         marker: newMarker
       };
-    });
+    });*/
   };
 
   const createMap = () => {
@@ -128,21 +136,20 @@ export const NewEvent = (): JSX.Element => {
       shadowUrl: '/leaflet/marker-shadow.png'
     });
 
-    map.on('click', function (event: any) {
-      // any position in leaflet needs to be projected to obtain the image coordinates
+    map.on('click', (event: any) => {
       var coords = event.latlng;
-      handleOnClickMap(map, coords);
+      console.log(stateRef.current);
+      if (stateRef.current && stateRef.current.marker === null) handleOnClickMap(map, coords);
     });
   };
 
   const handleOnFinishForm = (values: any) => {
     if (state.marker === null) {
-      alert("Please add a marker on the map");
+      alert('Please add a marker on the map');
+    } else {
+      console.log('ok');
     }
-    else {
-      console.log("ok");
-    }
-  }
+  };
 
   return (
     <>

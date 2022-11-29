@@ -42,6 +42,8 @@ export const Map = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
+    if (!state.displayingMap)
+      return;
     navigator.geolocation.getCurrentPosition(
       function (position) {
         console.log(position);
