@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Dropdown, Menu as AntdMenu } from 'antd';
+import { Button, Dropdown, Menu as AntdMenu } from 'antd';
 
 export const Layout = styled.div`
   overflow: auto;
@@ -70,6 +70,10 @@ export const NavbarOptions = styled.div`
   align-items: center;
   width: 80px;
   height: 100%;
+`;
+
+export const SigninButton = styled(Button)`
+  
 `;
 
 interface AvatarProps {

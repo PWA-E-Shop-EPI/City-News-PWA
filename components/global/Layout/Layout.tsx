@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { useUser } from '@auth0/nextjs-auth0';
+import { useRouter } from 'next/router';
 
 //styles
 import * as Styled from './styles';
@@ -16,6 +17,7 @@ interface Props {
 
 export const Layout = (props: Props): JSX.Element => {
   const { user } = useUser();
+  const router = useRouter();
 
   const getProfileMenu = () => {
     return (
@@ -42,10 +44,24 @@ export const Layout = (props: Props): JSX.Element => {
     );
   };
 
+  const displayOptions = (): JSX.Element => {
+    if (user) {
+      return (
+        <Styled.MenuDropdown trigger={['click']} overlay={getProfileMenu()} placement={'bottom'}>
+          <Styled.Avatar src={user ? user.picture ?? '' : ''} />
+        </Styled.MenuDropdown>
+      );
+    } else {
+      return (
+        <Styled.SigninButton onClick={() => router.push(paths.home.api.auth.login.index)}>Sign in</Styled.SigninButton>
+      );
+    }
+  };
+
   return (
     <Styled.Layout className={props.className}>
       <Styled.Navbar id={'navbar'}>
-        <Styled.NavbarTitle/>
+        <Styled.NavbarTitle />
         <Styled.NavbarLinks>
           <Link href={paths.home.index} passHref>
             <Styled.NavbarLink isSelected={props.keySelected === 0}>Home</Styled.NavbarLink>
@@ -54,11 +70,7 @@ export const Layout = (props: Props): JSX.Element => {
             <Styled.NavbarLink isSelected={props.keySelected === 1}>New event</Styled.NavbarLink>
           </Link>
         </Styled.NavbarLinks>
-        <Styled.NavbarOptions>
-          <Styled.MenuDropdown trigger={['click']} overlay={getProfileMenu()} placement={'bottom'}>
-            <Styled.Avatar src={user ? user.picture ?? '' : ''}/>
-          </Styled.MenuDropdown>
-        </Styled.NavbarOptions>
+        <Styled.NavbarOptions>{displayOptions()}</Styled.NavbarOptions>
       </Styled.Navbar>
       <Styled.Content id={'content'}>{props.children}</Styled.Content>
     </Styled.Layout>
