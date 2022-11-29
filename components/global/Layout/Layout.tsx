@@ -28,6 +28,14 @@ export const Layout = (props: Props): JSX.Element => {
                 <Styled.MenuChildrenLink>Profile</Styled.MenuChildrenLink>
               </Link>
             )
+          },
+          {
+            key: '2',
+            label: (
+              <Link href={paths.home.events.index}>
+                <Styled.MenuChildrenLink>My events</Styled.MenuChildrenLink>
+              </Link>
+            )
           }
         ]}
       />

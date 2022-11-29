@@ -3,7 +3,10 @@ const runtimeCaching = require('next-pwa/cache');
 const withPWA = require('next-pwa')({
   dest: 'public',
   scope: '/',
-  runtimeCaching
+  runtimeCaching,
+  fallbacks: {
+    image: '/logo.png'
+  },
 });
 
 module.exports = withPWA({

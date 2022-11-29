@@ -13,6 +13,10 @@ const paths = {
       index: "/new-event",
       __query: ["new-event"]
     },
+    events: {
+      index: "/events",
+      __query: ["events"]
+    },
     api: {
       index: '/api',
       __query: ['api'],

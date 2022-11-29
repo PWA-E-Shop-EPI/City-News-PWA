@@ -45,7 +45,7 @@ export const Map = (): JSX.Element => {
     navigator.geolocation.getCurrentPosition(
       function (position) {
         console.log(position);
-        state.leafletMapProps.map.setView([position.coords.latitude, position.coords.longitude], 13);
+        state?.leafletMapProps?.map?.setView([position.coords.latitude, position.coords.longitude], 13);
       },
 
       function (error) {
@@ -120,7 +120,7 @@ export const Map = (): JSX.Element => {
       if (event.expires > 0) {
         markerOnMap = L.marker([event.lat, event.lng]);
       } else if (event.expires <= 0 && event.expires > -7) {
-        markerOnMap = L.marker([event.lat, event.lng], {icon: greyMarkerIcon});
+        markerOnMap = L.marker([event.lat, event.lng], { icon: greyMarkerIcon });
       } else {
         return;
       }
@@ -128,7 +128,7 @@ export const Map = (): JSX.Element => {
       console.log(event);
       event.markerOnMap = markerOnMap;
       event.markerOnMap.on('click', function (e: any) {
-        map.setView([event.lat, event.lng], 13);
+        map.setView([event.lat, event.lng], map.getZoom() > 13 ? map.getZoom() : 13);
         setState(prevState => {
           return {
             ...prevState,
