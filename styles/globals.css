@@ -1,9 +1,13 @@
+@import "antd/dist/antd.css";
+@import "leaflet/dist/leaflet.css";
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: #ededed; 
 }
 
 a {
@@ -15,12 +19,11 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+.leaflet-popupCustom {
+  width: 135px;
+  height: 95px;
+}
+
+.leaflet-popupCustom > div:nth-child(1) > div:nth-child(1) {
+  margin: 0px !important;
 }
