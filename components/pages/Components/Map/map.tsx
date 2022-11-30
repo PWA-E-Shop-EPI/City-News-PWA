@@ -130,7 +130,7 @@ export const Map = (): JSX.Element => {
       console.log(event);
       event.markerOnMap = markerOnMap;
       event.markerOnMap.on('click', function (e: any) {
-        map.setView([event.lat, event.lng], map.getZoom() > 13 ? map.getZoom() : 13);
+        map.setView([event.lat, event.lng], map.getZoom() > 14 ? map.getZoom() : 14);
         setState(prevState => {
           return {
             ...prevState,
