@@ -152,6 +152,15 @@ export const NewEvent = (): JSX.Element => {
       console.log('ok');
       if (!user || !user.email)
         return;
+      console.log({
+        user: user.email,
+        type: values.type,
+        title: values.title,
+        desc: values.desc,
+        lat: state.marker.position.x,
+        lng: state.marker.position.y,
+        expires: 2,
+      });
       API.events().POST({body: {
         user: user.email,
         type: values.type,
