@@ -1,5 +1,5 @@
-import React from 'react';
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
+import React, { useState } from 'react';
+import { getSession, useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Head from 'next/head';
 import { ColumnsType } from 'antd/lib/table';
 import moment from 'moment';
@@ -17,15 +17,49 @@ import * as Styled from 'styles/pages/events';
 import { Event } from 'store/events';
 import API from 'common/API/API';
 import { Button } from 'antd';
+import { useRouter } from 'next/router';
 
 interface Props {
   events: Array<Event>;
 }
 
-export async function getServerSideProps(context: any) {
+interface State {
+  events: Array<Event>;
+}
+
+export const getServerSideProps = withPageAuthRequired({
+  returnTo: paths.home.events.index,
+  async getServerSideProps(ctx) {
+    const redirect = {
+      redirect: {
+        permanent: false,
+        destination: paths.home.index,
+      },
+    };
+    let events: never[] = [];
+    try {
+      const session = getSession(ctx.req, ctx.res);
+      if (!session) {
+        return redirect;
+      }
+      const email = session.user.email;
+      const response = await API.userevents().GET({query: `?user=${email}`});
+      events = response?.data.response
+    } catch (error) {
+      console.log(error);
+    }
+    return {
+      props: {
+        events
+      } // will be passed to the page component as props
+    };
+  }
+});
+
+/*export async function getServerSideProps(context: any) {
   let events: never[] = []
   try {
-    const response = await API.events().GET();
+    const response = await API.userevents().GET({query: });
     events = response?.data.response
   } catch (error) {
     console.log(error);
@@ -35,15 +69,25 @@ export async function getServerSideProps(context: any) {
       events,
     }, // will be passed to the page component as props
   }
-}
-
-async function deleteEvent(key: number): Promise<void | PromiseLike<void>> {
-  if (window.confirm('Are you sure you want to delete this event?')) {
-    await API.events().GET();
-  }
-}
+}*/
 
 export const Events = (props: Props): JSX.Element => {
+  const [state, setState] = useState<State>({
+    events: props.events
+  });
+  const router = useRouter();
+
+  async function deleteEvent(key: number): Promise<void | PromiseLike<void>> {
+    if (window.confirm('Are you sure you want to delete this event?')) {
+      try {
+        await API.events().eventId({value: `${key}`}).DELETE();
+        router.reload();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
   const getColumns = (): ColumnsType<any> => {
     const columns: ColumnsType<Event> = [
       {
@@ -70,11 +114,12 @@ export const Events = (props: Props): JSX.Element => {
             {record.lat}, {record.lng}
           </div>
         )
-      }, {
+      },
+      {
         title: 'Actions',
         key: 'actions',
         render: (_, record) => (
-          <Button style={{ color: "red" }} onClick={async () => await deleteEvent(record.id)}>
+          <Button style={{ color: 'red' }} onClick={async () => await deleteEvent(record.id)}>
             Delete
           </Button>
         )
@@ -94,7 +139,7 @@ export const Events = (props: Props): JSX.Element => {
         lat: event.lat,
         lng: event.lng,
         text: event.description,
-        expires: event.expires,
+        expires: event.expires
       });
     });
     return data;
@@ -107,10 +152,10 @@ export const Events = (props: Props): JSX.Element => {
       </Head>
       <Layout keySelected={-1}>
         <Styled.Events>
-          <h2 style={{marginTop: 16}}>My Events</h2>
+          <h2 style={{ marginTop: 16 }}>My Events</h2>
           <Styled.EventsTable
             columns={getColumns()}
-            dataSource={getData().filter((line) => line.expires > 0)}
+            dataSource={getData().filter(line => line.expires > 0)}
             rowKey={'key'}
             expandable={{ expandedRowRender: (record: any) => <div>{record.text}</div> }}
           />
@@ -119,7 +164,7 @@ export const Events = (props: Props): JSX.Element => {
           <h2>My passed Events</h2>
           <Styled.EventsTable
             columns={getColumns()}
-            dataSource={getData().filter((line) => line.expires <= 0)}
+            dataSource={getData().filter(line => line.expires <= 0)}
             rowKey={'key'}
             expandable={{ expandedRowRender: (record: any) => <div>{record.text}</div> }}
           />
@@ -130,4 +175,3 @@ export const Events = (props: Props): JSX.Element => {
 };
 
 export default Events;
-
