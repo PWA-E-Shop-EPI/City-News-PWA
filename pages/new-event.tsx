@@ -17,6 +17,7 @@ import * as GlobalStyled from 'styles/globals';
 //common
 import { EventType } from 'common/enum';
 import { LeafletMapProps } from 'common/types';
+import API from 'common/API/API';
 
 export const getServerSideProps = withPageAuthRequired({
   returnTo: paths.home.newEvent.index
@@ -148,6 +149,14 @@ export const NewEvent = (): JSX.Element => {
       alert('Please add a marker on the map');
     } else {
       console.log('ok');
+      API.events().POST({body: {
+        type: values.type,
+        title: values.title,
+        desc: values.desc,
+        lat: state.marker.position.x,
+        lng: state.marker.position.y,
+        expires: 2,
+      }});
     }
   };
 
