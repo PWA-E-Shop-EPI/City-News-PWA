@@ -84,8 +84,8 @@ export const Events = (props: Props): JSX.Element => {
     //if (window.confirm('Are you sure you want to delete this event?')) {
       console.log("key => ", key);
       try {
-        await API.events().eventId({value: `${key}`}).DELETE();
-        Router.reload();
+        const res = await API.events().eventId({value: `${key}`}).DELETE();
+        Router.push(paths.home.index);
       } catch (error) {
         console.log(error);
       }
