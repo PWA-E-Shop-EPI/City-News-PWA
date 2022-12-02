@@ -80,12 +80,12 @@ export const Events = (props: Props): JSX.Element => {
     events: props.events
   });
 
-  async function deleteEvent(key: number): Promise<void> {
+  const deleteEvent = async(key: number): Promise<void> => {
     if (window.confirm('Are you sure you want to delete this event?')) {
       console.log("key => ", key);
       try {
         await API.events().eventId({value: `${key}`}).DELETE();
-        window.location.reload();
+        window.location.href = window.location.href;
       } catch (error) {
         console.log(error);
       }
