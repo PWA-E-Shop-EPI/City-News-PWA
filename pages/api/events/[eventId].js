@@ -1,5 +1,6 @@
 const PWAEventsAPI = require('../../../backend/mysql');
 const procedure = require('../../../backend/procedures');
+import NextCors from 'nextjs-cors';
 
 export default async function handler(req, res) {
     await NextCors(req, res, {
