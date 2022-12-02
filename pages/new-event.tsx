@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Head from 'next/head';
 
 //config
@@ -45,6 +45,7 @@ export const NewEvent = (): JSX.Element => {
   });
   const stateRef = useRef<State>();
   stateRef.current = state;
+  const {user} = useUser();
 
   console.log('newState =>', state);
 
@@ -149,7 +150,10 @@ export const NewEvent = (): JSX.Element => {
       alert('Please add a marker on the map');
     } else {
       console.log('ok');
+      if (!user || !user.email)
+        return;
       API.events().POST({body: {
+        user: user.email,
         type: values.type,
         title: values.title,
         desc: values.desc,

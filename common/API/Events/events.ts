@@ -21,7 +21,7 @@ export interface EventsGetRes {
 
 export interface EventsPost {
   body: {
-    //user, 
+    user: string, 
     type: string,
     title: string,
     desc: string,
