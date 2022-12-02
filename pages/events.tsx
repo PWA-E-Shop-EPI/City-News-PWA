@@ -81,15 +81,15 @@ export const Events = (props: Props): JSX.Element => {
   });
 
   const deleteEvent = async(key: number): Promise<void> => {
-    if (window.confirm('Are you sure you want to delete this event?')) {
+    //if (window.confirm('Are you sure you want to delete this event?')) {
       console.log("key => ", key);
       try {
         await API.events().eventId({value: `${key}`}).DELETE();
-        window.location.href = window.location.href;
+        Router.reload();
       } catch (error) {
         console.log(error);
       }
-    }
+    //}
   }
 
   const getColumns = (): ColumnsType<any> => {
