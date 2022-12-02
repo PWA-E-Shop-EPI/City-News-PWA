@@ -77,8 +77,9 @@ export const Events = (props: Props): JSX.Element => {
   });
   const router = useRouter();
 
-  async function deleteEvent(key: number): Promise<void | PromiseLike<void>> {
+  async function deleteEvent(key: number): Promise<void> {
     if (window.confirm('Are you sure you want to delete this event?')) {
+      console.log("key => ", key);
       try {
         await API.events().eventId({value: `${key}`}).DELETE();
         router.reload();
