@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
     function getMessage() {
       const messaging = firebase;
-      messaging.onMessage((message) => console.log('foreground', message), null);
+      // messaging.onMessage((message) => console.log('foreground', message), null);
     }
   }, []);
   return (
