@@ -120,7 +120,7 @@ export const Events = (props: Props): JSX.Element => {
         title: 'Actions',
         key: 'actions',
         render: (_, record) => (
-          <Button style={{ color: 'red' }} onClick={async () => await deleteEvent(record.id)}>
+          <Button style={{ color: 'red' }} onClick={() => deleteEvent(record.id)}>
             Delete
           </Button>
         )
@@ -134,6 +134,7 @@ export const Events = (props: Props): JSX.Element => {
     props.events.forEach(event => {
       data.push({
         key: event.id,
+        id: event.id,
         title: event.title,
         type: event.type,
         date: event.date,
