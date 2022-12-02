@@ -7,6 +7,13 @@ import { Toaster } from 'react-hot-toast';
 import { resetStore } from 'hooks/useStore';
 import Theme from 'components/global/Theme/theme';
 import Head from 'next/head';
+import { useEffect } from 'react';
+
+declare global {
+  interface Window {
+    OneSignal: any;
+  }
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   resetStore();
@@ -42,7 +49,6 @@ function MyApp({ Component, pageProps }: AppProps) {
           sizes="32x32"
         />
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
-        <meta name="theme-color" content="#317EFB" />
       </Head>
       <UserProvider>
         <Theme>

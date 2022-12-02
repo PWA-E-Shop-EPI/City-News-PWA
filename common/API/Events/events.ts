@@ -5,7 +5,7 @@ export interface EventsGetResData {
   id: number;
   type: string;
   title: string;
-  text: string;
+  description: string;
   date: string;
   lat: number;
   lng: number;

@@ -15,49 +15,33 @@ import * as Styled from 'styles/pages/events';
 
 //store
 import { Event } from 'store/events';
+import API from 'common/API/API';
+import { Button } from 'antd';
 
 interface Props {
   events: Array<Event>;
 }
 
-const fake: Array<Event> = [
-  {
-    id: 1,
-    type: 'Catastrophe Naturelle',
-    title: 'Tremblement de terre dans le centre ville',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean est lectus, pharetra id gravida quis, tempus pulvinar diam. Curabitur congue, libero non porttitor vulputate, ipsum risus vulputate lacus, eget dapibus dolor diam ac elit. Praesent et tellus vulputate, consequat dolor ut, tincidunt lectus. Etiam vestibulum sodales dui nec ornare. Vivamus sodales fringilla gravida. Fusce sit amet sagittis magna, mattis fermentum neque. Donec nisi purus, varius ac volutpat at, consectetur et metus. Vestibulum est nibh, gravida ut sapien at, finibus viverra tortor. Integer non sapien metus. Phasellus ac lacinia elit. Vestibulum faucibus turpis massa, et placerat metus consectetur nec.Nulla rhoncus sapien vitae aliquet iaculis. Sed rutrum turpis quis risus pretium sodales. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc leo justo, ultricies non mi vitae, lobortis facilisis dui. Vestibulum auctor vulputate leo. Aliquam gravida nunc at dolor faucibus, at laoreet lectus dictum. Nam pretium porttitor justo ut vehicula. Praesent sem erat, faucibus ut erat in, vestibulum venenatis massa. Donec enim mauris, bibendum et tincidunt eu, bibendum vel felis. Etiam lobortis diam dui, non interdum magna vulputate id. Sed ornare interdum diam, nec interdum justo congue condimentum. Nullam elementum arcu non porta scelerisque. Aliquam magna justo, volutpat ultrices viverra ut, tristique eu quam.Proin id fringilla dui. Quisque pulvinar aliquam ante a dapibus. Duis molestie porta ipsum quis venenatis. Vivamus congue augue eget elit facilisis suscipit sit amet in nisl. Aenean non libero urna. Donec fringilla at felis ac sollicitudin. Fusce sit amet nisl ultricies, rhoncus tellus at, mattis tortor.',
-    date: '2022-11-20T15:13:32+00:00',
-    lat: 49.1984,
-    lng: 2.4732,
-    expires: 2
-  },
-  {
-    id: 2,
-    type: 'Fait divers',
-    title: 'Ouverture du marché de Noel',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean est lectus, pharetra id gravida quis, tempus pulvinar diam. Curabitur congue, libero non porttitor vulputate, ipsum risus vulputate lacus, eget dapibus dolor diam ac elit. Praesent et tellus vulputate, consequat dolor ut, tincidunt lectus. Etiam vestibulum sodales dui nec ornare. Vivamus sodales fringilla gravida. Fusce sit amet sagittis magna, mattis fermentum neque. Donec nisi purus, varius ac volutpat at, consectetur et metus. Vestibulum est nibh, gravida ut sapien at, finibus viverra tortor. Integer non sapien metus. Phasellus ac lacinia elit. Vestibulum faucibus turpis massa, et placerat metus consectetur nec.Nulla rhoncus sapien vitae aliquet iaculis. Sed rutrum turpis quis risus pretium sodales. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc leo justo, ultricies non mi vitae, lobortis facilisis dui. Vestibulum auctor vulputate leo. Aliquam gravida nunc at dolor faucibus, at laoreet lectus dictum. Nam pretium porttitor justo ut vehicula. Praesent sem erat, faucibus ut erat in, vestibulum venenatis massa. Donec enim mauris, bibendum et tincidunt eu, bibendum vel felis. Etiam lobortis diam dui, non interdum magna vulputate id. Sed ornare interdum diam, nec interdum justo congue condimentum. Nullam elementum arcu non porta scelerisque. Aliquam magna justo, volutpat ultrices viverra ut, tristique eu quam.Proin id fringilla dui. Quisque pulvinar aliquam ante a dapibus. Duis molestie porta ipsum quis venenatis. Vivamus congue augue eget elit facilisis suscipit sit amet in nisl. Aenean non libero urna. Donec fringilla at felis ac sollicitudin. Fusce sit amet nisl ultricies, rhoncus tellus at, mattis tortor.',
-    date: '2022-10-20T15:13:32+00:00',
-    lat: 49.1984,
-    lng: 2.4732,
-    expires: -1
-  },
-  {
-    id: 3,
-    type: 'Fait divers',
-    title: 'Ouverture du marché de Noel',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean est lectus, pharetra id gravida quis, tempus pulvinar diam. Curabitur congue, libero non porttitor vulputate, ipsum risus vulputate lacus, eget dapibus dolor diam ac elit. Praesent et tellus vulputate, consequat dolor ut, tincidunt lectus. Etiam vestibulum sodales dui nec ornare. Vivamus sodales fringilla gravida. Fusce sit amet sagittis magna, mattis fermentum neque. Donec nisi purus, varius ac volutpat at, consectetur et metus. Vestibulum est nibh, gravida ut sapien at, finibus viverra tortor. Integer non sapien metus. Phasellus ac lacinia elit. Vestibulum faucibus turpis massa, et placerat metus consectetur nec.Nulla rhoncus sapien vitae aliquet iaculis. Sed rutrum turpis quis risus pretium sodales. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc leo justo, ultricies non mi vitae, lobortis facilisis dui. Vestibulum auctor vulputate leo. Aliquam gravida nunc at dolor faucibus, at laoreet lectus dictum. Nam pretium porttitor justo ut vehicula. Praesent sem erat, faucibus ut erat in, vestibulum venenatis massa. Donec enim mauris, bibendum et tincidunt eu, bibendum vel felis. Etiam lobortis diam dui, non interdum magna vulputate id. Sed ornare interdum diam, nec interdum justo congue condimentum. Nullam elementum arcu non porta scelerisque. Aliquam magna justo, volutpat ultrices viverra ut, tristique eu quam.Proin id fringilla dui. Quisque pulvinar aliquam ante a dapibus. Duis molestie porta ipsum quis venenatis. Vivamus congue augue eget elit facilisis suscipit sit amet in nisl. Aenean non libero urna. Donec fringilla at felis ac sollicitudin. Fusce sit amet nisl ultricies, rhoncus tellus at, mattis tortor.',
-    date: '2022-10-20T15:13:32+00:00',
-    lat: 49.1984,
-    lng: 2.4732,
-    expires: 1
-  }];
-
-export const getServerSideProps = withPageAuthRequired({
-  returnTo: paths.home.events.index,
-  async getServerSideProps() {
-    return { props: {events: fake} };
+export async function getServerSideProps(context: any) {
+  let events: never[] = []
+  try {
+    const response = await API.events().GET();
+    events = response?.data.response
+  } catch (error) {
+    console.log(error);
   }
-});
+  return {
+    props: {
+      events,
+    }, // will be passed to the page component as props
+  }
+}
+
+async function deleteEvent(key: number): Promise<void | PromiseLike<void>> {
+  if (window.confirm('Are you sure you want to delete this event?')) {
+    await API.events().GET();
+  }
+}
 
 export const Events = (props: Props): JSX.Element => {
   const getColumns = (): ColumnsType<any> => {
@@ -86,6 +70,14 @@ export const Events = (props: Props): JSX.Element => {
             {record.lat}, {record.lng}
           </div>
         )
+      }, {
+        title: 'Actions',
+        key: 'actions',
+        render: (_, record) => (
+          <Button style={{ color: "red" }} onClick={async () => await deleteEvent(record.id)}>
+            Delete
+          </Button>
+        )
       }
     ];
     return columns;
@@ -101,7 +93,8 @@ export const Events = (props: Props): JSX.Element => {
         date: event.date,
         lat: event.lat,
         lng: event.lng,
-        text: event.text
+        text: event.description,
+        expires: event.expires,
       });
     });
     return data;
@@ -114,9 +107,19 @@ export const Events = (props: Props): JSX.Element => {
       </Head>
       <Layout keySelected={-1}>
         <Styled.Events>
+          <h2 style={{marginTop: 16}}>My Events</h2>
           <Styled.EventsTable
             columns={getColumns()}
-            dataSource={getData()}
+            dataSource={getData().filter((line) => line.expires > 0)}
+            rowKey={'key'}
+            expandable={{ expandedRowRender: (record: any) => <div>{record.text}</div> }}
+          />
+        </Styled.Events>
+        <Styled.Events>
+          <h2>My passed Events</h2>
+          <Styled.EventsTable
+            columns={getColumns()}
+            dataSource={getData().filter((line) => line.expires <= 0)}
             rowKey={'key'}
             expandable={{ expandedRowRender: (record: any) => <div>{record.text}</div> }}
           />
@@ -127,3 +130,4 @@ export const Events = (props: Props): JSX.Element => {
 };
 
 export default Events;
+
