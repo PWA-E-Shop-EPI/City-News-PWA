@@ -81,15 +81,14 @@ export const Events = (props: Props): JSX.Element => {
   });
 
   const deleteEvent = async(key: number): Promise<void> => {
-    //if (window.confirm('Are you sure you want to delete this event?')) {
-      console.log("key => ", key);
+    if (window.confirm('Are you sure you want to delete this event?')) {
       try {
         const res = await API.events().eventId({value: `${key}`}).DELETE();
-        Router.push(paths.home.index);
+        Router.reload()
       } catch (error) {
         console.log(error);
       }
-    //}
+    }
   }
 
   const getColumns = (): ColumnsType<any> => {
