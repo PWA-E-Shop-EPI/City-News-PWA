@@ -149,7 +149,7 @@ export const NewEvent = (): JSX.Element => {
       alert('Please add a marker on the map');
     } else {
       console.log('ok');
-      console.log(user || user.email)
+      console.log(user, user?.email)
       if (!user || !user.email)
         return;
       console.log({
