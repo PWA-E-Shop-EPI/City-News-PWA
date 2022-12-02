@@ -2,12 +2,14 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { UserProvider } from '@auth0/nextjs-auth0';
 import { Toaster } from 'react-hot-toast';
-
+import { firebaseCloudMessaging } from '../components/global/webPush';
+import * as firebase from 'firebase/messaging';
 //hooks
 import { resetStore } from 'hooks/useStore';
 import Theme from 'components/global/Theme/theme';
 import Head from 'next/head';
 import { useEffect } from 'react';
+import { Messaging } from 'firebase/messaging';
 
 declare global {
   interface Window {
@@ -18,6 +20,25 @@ declare global {
 function MyApp({ Component, pageProps }: AppProps) {
   resetStore();
 
+  useEffect(() => {
+    setToken();
+    async function setToken() {
+      try {
+        console.log('TOTO')
+        const token = await firebaseCloudMessaging.init();
+        console.log(token)
+        if (token) {
+          getMessage();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    function getMessage() {
+      const messaging = firebase;
+      messaging.onMessage((message) => console.log('foreground', message), null);
+    }
+  }, []);
   return (
     <>
       <Toaster

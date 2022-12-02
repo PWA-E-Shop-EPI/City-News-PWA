@@ -54,7 +54,7 @@ export const Home = (props: Props): JSX.Element => {
         <title>City News | Home</title>
       </Head>
       <Styled.HomeLayout keySelected={0}>
-        {/* <Map /> */}
+        <Map />
       </Styled.HomeLayout>
     </>
   );
