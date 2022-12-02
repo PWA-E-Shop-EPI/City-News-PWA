@@ -47,6 +47,8 @@ export const getServerSideProps = withPageAuthRequired({
       const email = session.user.email;
       const response = await API.userevents().GET({query: `?user=${email}`});
       events = response?.data.response
+      if (!events)
+        events = [];
     } catch (error) {
       console.log(error);
     }
