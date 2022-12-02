@@ -7,5 +7,6 @@ export const Events = styled.div`
 `;
 
 export const EventsTable = styled(Table)`
-  margin-top: 30px;
+  margin-top: 8px;
+  margin-bottom: 16px;
 `;

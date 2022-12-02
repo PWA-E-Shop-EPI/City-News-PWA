@@ -84,7 +84,7 @@ export const Map = (): JSX.Element => {
           Date: <Styled.EventDescriptionDate>{date}</Styled.EventDescriptionDate>
         </p>
         <Styled.EventDescriptionDescription>
-          {eventsStoreValues.events[state.eventSelected].text}
+          {eventsStoreValues.events[state.eventSelected].description}
         </Styled.EventDescriptionDescription>
       </Styled.EventDescription>
     );
