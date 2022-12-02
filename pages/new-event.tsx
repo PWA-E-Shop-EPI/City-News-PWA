@@ -45,8 +45,7 @@ export const NewEvent = (): JSX.Element => {
   });
   const stateRef = useRef<State>();
   stateRef.current = state;
-  const {user} = useUser();
-
+  const { user } = useUser();
   console.log('newState =>', state);
 
   useEffect(() => {
@@ -150,9 +149,10 @@ export const NewEvent = (): JSX.Element => {
       alert('Please add a marker on the map');
     } else {
       console.log('ok');
+      console.log(user || user.email)
       if (!user || !user.email)
         return;
-      API.events().POST({body: {
+      console.log({
         user: user.email,
         type: values.type,
         title: values.title,
@@ -160,7 +160,18 @@ export const NewEvent = (): JSX.Element => {
         lat: state.marker.position.x,
         lng: state.marker.position.y,
         expires: 2,
-      }});
+      })
+      API.events().POST({
+        body: {
+          user: user.email,
+          type: values.type,
+          title: values.title,
+          desc: values.desc,
+          lat: state.marker.position.x,
+          lng: state.marker.position.y,
+          expires: 2,
+        }
+      });
     }
   };
 
