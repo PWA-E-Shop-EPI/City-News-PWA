@@ -3,6 +3,8 @@ import { getSession, useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Head from 'next/head';
 import { ColumnsType } from 'antd/lib/table';
 import moment from 'moment';
+import { Button } from 'antd';
+import Router from "next/router";
 
 //config
 import paths from 'config/paths';
@@ -15,9 +17,9 @@ import * as Styled from 'styles/pages/events';
 
 //store
 import { Event } from 'store/events';
+
+//common
 import API from 'common/API/API';
-import { Button } from 'antd';
-import { useRouter } from 'next/router';
 
 interface Props {
   events: Array<Event>;
@@ -75,14 +77,13 @@ export const Events = (props: Props): JSX.Element => {
   const [state, setState] = useState<State>({
     events: props.events
   });
-  const router = useRouter();
 
   async function deleteEvent(key: number): Promise<void> {
     if (window.confirm('Are you sure you want to delete this event?')) {
       console.log("key => ", key);
       try {
         await API.events().eventId({value: `${key}`}).DELETE();
-        router.replace(router.asPath);
+        Router.reload();
       } catch (error) {
         console.log(error);
       }

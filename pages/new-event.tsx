@@ -18,6 +18,7 @@ import * as GlobalStyled from 'styles/globals';
 import { EventType } from 'common/enum';
 import { LeafletMapProps } from 'common/types';
 import API from 'common/API/API';
+import { useRouter } from 'next/router';
 
 export const getServerSideProps = withPageAuthRequired({
   returnTo: paths.home.newEvent.index
@@ -46,7 +47,7 @@ export const NewEvent = (): JSX.Element => {
   const stateRef = useRef<State>();
   stateRef.current = state;
   const { user } = useUser();
-  console.log('newState =>', state);
+  const router = useRouter();
 
   useEffect(() => {
     window.addEventListener('resize', () => {
@@ -104,13 +105,6 @@ export const NewEvent = (): JSX.Element => {
     if (stateRef.current) {
       setState({ ...stateRef.current, marker: newMarker });
     }
-    /*setState(prevState => {
-      console.log("setState");
-      return {
-        ...prevState,
-        marker: newMarker
-      };
-    });*/
   };
 
   const createMap = () => {
@@ -144,25 +138,28 @@ export const NewEvent = (): JSX.Element => {
     });
   };
 
-  const handleOnFinishForm = (values: any) => {
+  const handleOnFinishForm = async (values: any) => {
     if (state.marker === null) {
       alert('Please add a marker on the map');
     } else {
-      console.log('ok');
-      console.log(user, user?.email)
       if (!user || !user.email)
         return;
-      API.events().POST({
-        body: {
-          user: user.email,
-          type: values.type,
-          title: values.title,
-          desc: values.description,
-          lat: state.marker.position.x,
-          lng: state.marker.position.y,
-          expires: 2,
-        }
-      });
+      try {
+        await API.events().POST({
+          body: {
+            user: user.email,
+            type: values.type,
+            title: values.title,
+            desc: values.description,
+            lat: state.marker.position.x,
+            lng: state.marker.position.y,
+            expires: 2,
+          }
+        });
+        router.push(paths.home.index);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
