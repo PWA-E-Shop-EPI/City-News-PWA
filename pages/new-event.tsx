@@ -145,7 +145,7 @@ export const NewEvent = (): JSX.Element => {
       if (!user || !user.email)
         return;
       try {
-        await API.events().POST({
+        const res = await API.events().POST({
           body: {
             user: user.email,
             type: values.type,
